@@ -4,80 +4,108 @@ import java.util.Scanner;
 
 public class Application {
     
+    
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in); // Create scanner instance
-        
-        if (args.length > 0) {
-            // Process CLI arguments
-        } else {
-            // No CLI arguments, ask for user input
-            System.out.println("Enter operation (e.g., add, factorial, subtract, multiply, divide):");
-            String operation = scanner.next().toLowerCase(); // Read operation
-            
-            switch (operation) {
-                case "add":
-                	// if user enters add, take arguments and pass them into the add method
-                    System.out.println("Enter the first operand:");
-                    double num1Add = scanner.nextDouble();
-                    System.out.println("Enter the second operand:");
-                    double num2Add = scanner.nextDouble();
-                    System.out.println("Result: " + add(num1Add, num2Add));
-                    break;
-                
-                case "factorial":
-                    // if user enters factorial, take argument and pass it into the factorial method
-                    System.out.println("Enter a number:");
-                    double number = scanner.nextDouble();
-                    System.out.println("Result: " + factorial(number));
-                    break;
-                
-                case "subtract":
-                    // if user enters subtrct, take arguments and pass them into the subtract method
-                    System.out.println("Enter the first operand:");
-                    double num1Subtract = scanner.nextDouble();
-                    System.out.println("Enter the second operand:");
-                    double num2Subtract = scanner.nextDouble();
-                    System.out.println("Result: " + subtract(num1Subtract, num2Subtract));
-                    break;
-                
-                case "multiply":
-                    // if user enters multiply, take arguments and pass them into the multiply method
-                    System.out.println("Enter the first operand:");
-                    double num1Multiply = scanner.nextDouble();
-                    System.out.println("Enter the second operand:");
-                    double num2Multiply = scanner.nextDouble();
-                    System.out.println("Result: " + multiply(num1Multiply, num2Multiply));
-                    break;
-                
-                case "divide":
-                    // if user enters divide, take arguments and pass them into the divide method
-                    System.out.println("Enter the first operand:");
-                    double num1Divide = scanner.nextDouble();
-                    System.out.println("Enter the second operand:");
-                    double num2Divide = scanner.nextDouble();
-                    System.out.println("Result: " + divide(num1Divide, num2Divide));
-                    break;
-                
-                default:
-                    System.out.println("Unsupported operation.");
-                    break;
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\nEnter operation (add, subtract, multiply, divide, pow, sqrt, log, log10, sin, cos, tan, factorial) or 'exit' to quit:");
+            String operation = scanner.next();
+
+            if (operation.equalsIgnoreCase("exit")) {
+                System.out.println("Exiting calculator...");
+                break;
+            }
+
+            if (!operation.equalsIgnoreCase("sqrt") && !operation.equalsIgnoreCase("log") && 
+                !operation.equalsIgnoreCase("log10") && !operation.equalsIgnoreCase("sin") && 
+                !operation.equalsIgnoreCase("cos") && !operation.equalsIgnoreCase("tan") && 
+                !operation.equalsIgnoreCase("factorial")) {
+                System.out.print("Enter first number: ");
+                double num1 = scanner.nextDouble();
+                System.out.print("Enter second number: ");
+                double num2 = scanner.nextDouble();
+
+                switch (operation.toLowerCase()) {
+                    case "add":
+                        System.out.println("Result: " + add(num1, num2));
+                        break;
+                    case "subtract":
+                        System.out.println("Result: " + subtract(num1, num2));
+                        break;
+                    case "multiply":
+                        System.out.println("Result: " + multiply(num1, num2));
+                        break;
+                    case "divide":
+                        System.out.println("Result: " + divide(num1, num2));
+                        break;
+                    case "pow":
+                        System.out.println("Result: " + power(num1, num2));
+                        break;
+                    default:
+                        System.out.println("Invalid operation.");
+                        break;
+                }
+            } else {
+                System.out.print("Enter number: ");
+                double num = scanner.nextDouble();
+
+                switch (operation.toLowerCase()) {
+                    case "sqrt":
+                        System.out.println("Result: " + sqrt(num));
+                        break;
+                    case "log":
+                        System.out.println("Result: " + log(num));
+                        break;
+                    case "log10":
+                        System.out.println("Result: " + log10(num));
+                        break;
+                    case "sin":
+                        System.out.println("Result: " + sin(Math.toRadians(num)));
+                        break;
+                    case "cos":
+                        System.out.println("Result: " + cos(Math.toRadians(num)));
+                        break;
+                    case "tan":
+                        System.out.println("Result: " + tan(Math.toRadians(num)));
+                        break;
+                    case "factorial":
+                        System.out.println("Result: " + factorial((int) num));
+                        break;
+                    default:
+                        System.out.println("Invalid operation.");
+                        break;
+                }
             }
         }
+
+        scanner.close();
     }
 
     public static double add(double a, double b) {
         //accepts two doubles as parameters and returns the sum
         return a + b;
     }
-
-    public static double factorial(double n) {
-        //accepts a double as parameters and returns its factorial
-        if (n <= 1) {
-            return 1;
-        } else {
-            return n * factorial(n - 1);
+    
+    public static long factorial(int num) {
+        if (num < 0) {
+            System.out.println("Factorial of negative number is undefined.");
+            return 0;
         }
+        return factorialHelper(num, num);
     }
+
+    private static long factorialHelper(int originalNum, int num) {
+        if (num <= 1) {
+            System.out.print("\rCalculating factorial: 100%");
+            return 1;
+        }
+        // Calculate progress and update progress bar
+        int progress = (int) (((originalNum - num + 1) / (double) originalNum) * 100);
+        System.out.print("\rCalculating factorial: " + progress + "%");
+        return num * factorialHelper(originalNum, num - 1);
+    }
+    
     
     public static double subtract(double a, double b) {
         //accepts two doubles as parameters and returns the difference 
@@ -96,5 +124,40 @@ public class Application {
         } else {
             throw new IllegalArgumentException("Cannot divide by zero");
         }
+    }
+
+    // Exponentiation
+    public static double power(double base, double exponent) {
+        return Math.pow(base, exponent);
+    }
+
+    // Square root
+    public static double sqrt(double number) {
+        return Math.sqrt(number);
+    }
+
+    // Natural logarithm
+    public static double log(double number) {
+        return Math.log(number);
+    }
+
+    // Base-10 logarithm
+    public static double log10(double number) {
+        return Math.log10(number);
+    }
+
+    // Sine function
+    public static double sin(double angleRadians) {
+        return Math.sin(angleRadians);
+    }
+
+    // Cosine function
+    public static double cos(double angleRadians) {
+        return Math.cos(angleRadians);
+    }
+
+    // Tangent function
+    public static double tan(double angleRadians) {
+        return Math.tan(angleRadians);
     }
 }
