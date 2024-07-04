@@ -9,7 +9,7 @@ public class Application {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\nEnter operation (add, subtract, multiply, divide, pow, sqrt, log, log10, sin, cos, tan, factorial) or 'exit' to quit:");
+            System.out.println("\nEnter operation (add, subtract, multiply, divide, pow, sqrt, log, log10, sin, cos, tan, factorial, permutation) or 'exit' to quit:");
             String operation = scanner.next();
 
             if (operation.equalsIgnoreCase("exit")) {
@@ -20,7 +20,7 @@ public class Application {
             if (!operation.equalsIgnoreCase("sqrt") && !operation.equalsIgnoreCase("log") && 
                 !operation.equalsIgnoreCase("log10") && !operation.equalsIgnoreCase("sin") && 
                 !operation.equalsIgnoreCase("cos") && !operation.equalsIgnoreCase("tan") && 
-                !operation.equalsIgnoreCase("factorial")) {
+                !operation.equalsIgnoreCase("factorial") && !operation.equalsIgnoreCase("permutation")) {
                 System.out.print("Enter first number: ");
                 double num1 = scanner.nextDouble();
                 System.out.print("Enter second number: ");
@@ -46,6 +46,14 @@ public class Application {
                         System.out.println("Invalid operation.");
                         break;
                 }
+            } else if (operation.equalsIgnoreCase("permutation")) {
+                System.out.print("Enter total number of elements: ");
+                int totalElements = scanner.nextInt();
+                System.out.print("Enter number of items to select: ");
+                int selectedItems = scanner.nextInt();
+
+                System.out.println("Recursive Permutations: " + recursivePerm(totalElements, selectedItems));
+                System.out.println("Non-Recursive Permutations: " + nonRecursivePerm(totalElements, selectedItems));
             } else {
                 System.out.print("Enter number: ");
                 double num = scanner.nextDouble();
@@ -77,10 +85,10 @@ public class Application {
                         break;
                 }
             }
+            
+            scanner.close();
         }
-
-        scanner.close();
-    }
+        }
 
     public static double add(double a, double b) {
         //accepts two doubles as parameters and returns the sum
@@ -159,5 +167,34 @@ public class Application {
     // Tangent function
     public static double tan(double angleRadians) {
         return Math.tan(angleRadians);
+    }
+
+    //Recursive permitation method
+     public static long recursivePerm(int totalElements, int selectedItems) {
+        if (selectedItems > totalElements) {
+            throw new IllegalArgumentException("Number of selected items must be less than or equal to total number of elements.");
+        }
+        if (totalElements < 0 || selectedItems < 0 || selectedItems > 100) {
+            throw new IllegalArgumentException("Please ensure that the total number of elements and selected items are between 0 and 100.");
+        }
+        if (selectedItems == 0) {
+            return 1;
+        }
+        return totalElements * recursivePerm(totalElements - 1, selectedItems - 1);
+    }
+
+    // Non-recursive method to calculate permutations
+    public static long nonRecursivePerm(int totalElements, int selectedItems) {
+        if (selectedItems > totalElements) {
+            throw new IllegalArgumentException("Number of selected items must be less than or equal to total number of elements.");
+        }
+        if (totalElements < 0 || selectedItems < 0 || selectedItems > 100) {
+            throw new IllegalArgumentException("Please ensure that the total number of elements and selected items are between 0 and 100.");
+        }
+        long result = 1;
+        for (int i = 0; i < selectedItems; i++) {
+            result *= (totalElements - i);
+        }
+        return result;
     }
 }
